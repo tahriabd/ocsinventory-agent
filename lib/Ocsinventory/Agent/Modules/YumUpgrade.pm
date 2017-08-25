@@ -13,11 +13,11 @@ use strict;
 use warnings;
 
 sub can_run {
-  my $binary = shift;
-  my $calling_namespace = caller(0);
-  chomp(my $binpath=`which $binary 2>/dev/null`);
-  return unless -x $binpath;
-  1;
+    my $binary = shift;
+    my $calling_namespace = caller(0);
+    chomp(my $binpath=`which $binary 2>/dev/null`);
+    return unless -x $binpath;
+    1;
 }
 
 sub new {
@@ -113,7 +113,7 @@ sub run {
 		if (defined($pkg)) {
 			&addPatch($common->{xmltags},{
 				'NAME'  		=> $pkg,
-                		'VERSION'       => '',
+                'VERSION'       => '',
 				'NEWVERSION'    => $ver,
 				'SOURCE'        => 0
 			});

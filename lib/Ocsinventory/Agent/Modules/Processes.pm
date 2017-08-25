@@ -95,14 +95,14 @@ sub processes_inventory_handler {
             my $cmd= $13;
             push @{$common->{xmltags}->{PROCESSES}},
             {
-                    USER => $user,
-                    PID => $pid,
-                    CPUUSAGE => $cpu,
-                    MEM => $mem,
-                    VIRTUALMEMORY => $vsz,
-                    TTY => $tty,
-                    STARTED => $begin,
-                    CMD => $cmd
+                    USER            => $user,
+                    PID             => $pid,
+                    CPUUSAGE        => $cpu,
+                    MEM             => $mem,
+                    VIRTUALMEMORY   => $vsz,
+                    TTY             => $tty,
+                    STARTED         => $begin,
+                    CMD             => $cmd
             };
         }
     }

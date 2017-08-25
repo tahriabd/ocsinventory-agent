@@ -13,11 +13,11 @@ use strict;
 use warnings;
 
 sub can_run {
-  my $binary = shift;
-  my $calling_namespace = caller(0);
-  chomp(my $binpath=`which $binary 2>/dev/null`);
-  return unless -x $binpath;
-  1;
+    my $binary = shift;
+    my $calling_namespace = caller(0);
+    chomp(my $binpath=`which $binary 2>/dev/null`);
+    return unless -x $binpath;
+    1;
 }
 
 sub new {
@@ -100,7 +100,6 @@ sub patch_inventory_handler {		#Use this hook to add or modify entries in the in
 sub run {
 	my $self = shift;
 	my $common = $self->{context}->{common};
-	my $logger = $self->{logger};
 
 	my ($pkg,$oldver,$ver,$tmp,$release,$source);
 
@@ -115,10 +114,10 @@ sub run {
 		$source = 0; 
 		$source = 1 if $release =~ /security/i;
 		&addPatch($common->{xmltags},{
-				'NAME'  	=> $pkg,
+				'NAME'          => $pkg,
 				'VERSION'       => $oldver,
-				'NEWVERSION'      => $ver,
-				'SOURCE'          => $source
+				'NEWVERSION'    => $ver,
+				'SOURCE'        => $source
 		});
 	}
 	close APT;

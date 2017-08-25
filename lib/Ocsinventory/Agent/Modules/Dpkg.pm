@@ -1,6 +1,7 @@
 ###############################################################################
 ## PVS pro 
 ## Abdou TAHRI
+## 
 ##
 ## This code is open source and may be copied and modified as long as the source
 ## code is always made freely available.
@@ -13,11 +14,11 @@ use warnings;
 use POSIX qw(strftime);
 
 sub can_run {
-  my $binary = shift;
-  my $calling_namespace = caller(0);
-  chomp(my $binpath=`which $binary 2>/dev/null`);
-  return unless -x $binpath;
-  1;
+    my $binary = shift;
+    my $calling_namespace = caller(0);
+    chomp(my $binpath=`which $binary 2>/dev/null`);
+    return unless -x $binpath;
+    1;
 }
 
 sub new {
@@ -103,11 +104,15 @@ sub run {
 	my $self = shift;
 	my $common = $self->{context}->{common};
 
-	my $ct = $self->{ct};
-	my $logger = $self->{logger};
-
-	# drop all softwares xml tag 
-	delete $common->{xmltags}->{SOFTWARES}; 
+	my @arr = @{$common->{xmltags}->{SOFTWARES}};
+	my @indexes = grep { $arr[$_]->{FROM}[0] eq "deb" } (keys @arr);
+	my $item;
+	foreach $item (@indexes) {
+		delete $common->{xmltags}->{SOFTWARES}[$item];
+	}
+	
+	@{$common->{xmltags}->{SOFTWARES}} = grep defined, @{$common->{xmltags}->{SOFTWARES}};
+	
 	opendir(D, "/var/lib/dpkg/info");
 	my @files = readdir(D);
 	closedir(D);
@@ -129,7 +134,7 @@ sub run {
 			if( $install =~ m/^install /i ) {
 				$source =~ s/ (\S+)//g;
 				&addSoftware ($common->{xmltags},{
-					'NAME'  	=> $pkg,
+					'NAME'          => $pkg,
 					'VERSION'       => $version,
 					'PACKNAME'      => $source,
 					'FILESIZE'      => $size,
@@ -137,7 +142,6 @@ sub run {
 					'INSTALLDATE'   => $installdate,
 					'FROM'          => 'deb'
 				});
-
 			}
 		}
 	}
@@ -152,7 +156,6 @@ sub addSoftware {
 	my $ocscomments = $args->{COMMENTS};
 	my $ocsinstalldate = $args->{INSTALLDATE};
 	my $ocsfrom = $args->{FROM};
-
 	push @{$xmltags->{SOFTWARES}},
 	{
 		NAME => [$ocsname],

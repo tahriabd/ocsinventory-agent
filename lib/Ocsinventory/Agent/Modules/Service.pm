@@ -31,11 +31,11 @@ my %known_all = ();
 
 
 sub can_run {
-  my $binary = shift;
-  my $calling_namespace = caller(0);
-  chomp(my $binpath=`which $binary 2>/dev/null`);
-  return unless -x $binpath;
-  1;
+    my $binary = shift;
+    my $calling_namespace = caller(0);
+    chomp(my $binpath=`which $binary 2>/dev/null`);
+    return unless -x $binpath;
+    1;
 }
 
 sub new {
