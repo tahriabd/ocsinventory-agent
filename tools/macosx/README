@@ -1,0 +1,40 @@
+DESCRIPTION
+OS X [darwin] Readme
+
+This README will help you roll your own native OSX, OCSNG.app client for enterprise deployment.
+
+PREREQUISITES
+
+- XCode 3.0
+- Darwin Perl dependancies [A tarball with all the PerlDep's you'll need for this to run in darwin-land, see create....cpan.pl script]
+- OCSNG.pmproj [Apple PackageMaker binrary settings file]
+- PackageMaker [xcode]
+
+BUILDING/INSTALLING
+
+- Check out BZR if needed
+- copy the inc/ directory (might need to get it out of one of the previous releases) to unified_unix_agent
+- cd ./unified_unix_agent/tools/macosx
+- run the create-darwin-perl-lib_fromCPAN.pl script which will create the ~/darwin-perl-lib directory. This directory will stash a built version of all the perl libraries needed to run this client (ie: no running CPAN on the hosts you're deploying this on)
+	- READ THE SCRIPT BEFORE RUNNING, some CPAN configurations are needed prior to running
+	- You'll need CPAN, Perl (the development libraries for perl), so Xcode Tools (just about a full install).
+
+- sh ./BUILDME.sh
+- modify ocsinventory-agent.cfg file for your organization (TAG, server, logfile, etc...)
+- SEE INSTALL for more information on custom deployment
+
+COPYRIGHT
+
+See AUTHORS file. Ocsinventory-Agent is released under GNU GPL 2 licence. Portions of the Xcode project may fall under other, open licences (individual files will elaborate). Some of the Xcode project files are not core pieces of OCSNG and are to be treated as a supplement tool for building the agent for OSX deployment.
+
+NOTES
+
+- macosx tools was created by claimid.com/wesyoung and modified by OCS NG team for the 2.0 version.
+
+- READ THE INSTALL AND UNINSTALL SCRIPTS BEFORE DEPLOYING!!! These scripts require sudo access and will modify your system by:
+  - installing files
+  - adding launch daemons to launchd
+
+- Use these scripts at your own risk, I claim no responsibilty nor give any warranty that they work.
+
+- This package works on MacOSX 10.4 to 10.6 on i386, ppc and x86_64 architectures. Support for MacOSX 10.7 needs to be tested. 
