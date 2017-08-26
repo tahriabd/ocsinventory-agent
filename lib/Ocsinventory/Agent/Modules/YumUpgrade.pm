@@ -13,11 +13,11 @@ use strict;
 use warnings;
 
 sub can_run {
-    my $binary = shift;
-    my $calling_namespace = caller(0);
-    chomp(my $binpath=`which $binary 2>/dev/null`);
-    return unless -x $binpath;
-    1;
+	my $binary = shift;
+	my $calling_namespace = caller(0);
+	chomp(my $binpath=`which $binary 2>/dev/null`);
+	return unless -x $binpath;
+	1;
 }
 
 sub new {
@@ -112,8 +112,8 @@ sub run {
 		($pkg,$ver,$repo) = /(\S+)\s+(\S+)\s+(\S+)/;
 		if (defined($pkg)) {
 			&addPatch($common->{xmltags},{
-				'NAME'  		=> $pkg,
-                'VERSION'       => '',
+				'NAME'  	=> $pkg,
+		                'VERSION'       => '',
 				'NEWVERSION'    => $ver,
 				'SOURCE'        => 0
 			});
@@ -133,9 +133,7 @@ sub addPatch {
     	foreach my $node ( @{$xmltags->{SOFTWARES}} ) {
 		if ( $name eq $node->{NAME}[0]) {
 			$oldversion = $node->{VERSION}[0];
-			push @{$xmltags->{PATCH}},
-
-            		{
+			push @{$xmltags->{PATCH}}, {
                 		NAME => [$name],
                 		VERSION => [$oldversion],
                 		NEWVERSION => [$newversion],
@@ -150,9 +148,7 @@ sub addPatch {
 sub patch_end_handler {		#Use this hook to add treatments before the end of agent launch
 	my $self = shift;
 	my $logger = $self->{logger};
-
 	$logger->debug("Yeah you are in patch_end_handler :)");
-
 }
 
 1;

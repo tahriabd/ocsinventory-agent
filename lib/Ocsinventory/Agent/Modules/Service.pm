@@ -18,8 +18,8 @@ my $initdir = '/etc/init.d';
 #my $xinetddir = '/etc/xinetd.d';
 
 my %to_d = (
-  '0' => 'rc0.d', '1' => 'rc1.d', '2' => 'rc2.d', '3' => 'rc3.d',
-  '4' => 'rc4.d', '5' => 'rc5.d', 'S' => 'rcS.d', 'B' => 'boot.d'
+	'0' => 'rc0.d', '1' => 'rc1.d', '2' => 'rc2.d', '3' => 'rc3.d',
+	'4' => 'rc4.d', '5' => 'rc5.d', 'S' => 'rcS.d', 'B' => 'boot.d'
 );
 
 
@@ -31,11 +31,11 @@ my %known_all = ();
 
 
 sub can_run {
-    my $binary = shift;
-    my $calling_namespace = caller(0);
-    chomp(my $binpath=`which $binary 2>/dev/null`);
-    return unless -x $binpath;
-    1;
+	my $binary = shift;
+	my $calling_namespace = caller(0);
+	chomp(my $binpath=`which $binary 2>/dev/null`);
+	return unless -x $binpath;
+    	1;
 }
 
 sub new {
