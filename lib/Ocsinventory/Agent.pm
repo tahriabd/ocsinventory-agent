@@ -5,6 +5,7 @@ package Ocsinventory::Agent;
 use strict;
 use warnings;
 
+use POSIX ":sys_wait_h";
 # THIS IS AN UGLY WORKAROUND FOR
 # http://rt.cpan.org/Ticket/Display.html?id=38067
 use XML::Simple;
@@ -245,6 +246,7 @@ sub run {
 
         my $exitcode = 0;
         my $wait;
+      my $child;
         if ($config->{config}{daemon} || $config->{config}{wait}) {
             my $serverdelay;
             if(($config->{config}{wait} eq 'server') || ($config->{config}{wait}!~/^\d+$/)){
@@ -394,6 +396,11 @@ sub run {
 
         #Using end_handler_hook 
         $hooks->run({name => 'end_handler'});
+
+        # avoid zombie processes
+        do {
+            $child = waitpid(-1, WNOHANG);
+        } while $child > 0;
 
         exit (0) unless $config->{config}{daemon};
 
