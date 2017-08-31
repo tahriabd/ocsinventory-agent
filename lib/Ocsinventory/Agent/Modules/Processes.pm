@@ -8,47 +8,101 @@
 ################################################################################
 
 package Ocsinventory::Agent::Modules::Processes;
+use strict;
+use warnings;
+
+sub can_run {
+    my $binary = shift;
+    my $calling_namespace = caller(0);
+    chomp(my $binpath=`which $binary 2>/dev/null`);
+    return unless -x $binpath;
+    1;
+}
 
 sub new {
+	my $name="processes";   #Set the name of your module here
 
-   my $name="processes"; # Name of the module
+	my (undef,$context) = @_;
+	my $self = {};
 
-   my (undef,$context) = @_;
-   my $self = {};
+	#Create a special logger for the module
+	$self->{logger} = new Ocsinventory::Logger ({
+		config => $context->{config}
+	});
 
-   #Create a special logger for the module
-   $self->{logger} = new Ocsinventory::Logger ({
-            config => $context->{config}
-   });
+	$self->{logger}->{header}="[$name]";
 
-   $self->{logger}->{header}="[$name]";
+	$self->{context}=$context;
 
-   $self->{context}=$context;
+	$self->{structure}= {
+		name => $name,
+		start_handler => undef,    #or undef if don't use this hook 
+		prolog_writer => undef,    #or undef if don't use this hook  
+		prolog_reader => undef,    #or undef if don't use this hook  
+		inventory_handler => $name."_inventory_handler",    #or undef if don't use this hook 
+		end_handler => undef   #or undef if don't use this hook 
+	};
 
-   $self->{structure}= {
-                        name => $name,
-                        start_handler => undef,    #or undef if don't use this hook
-                        prolog_writer => undef,    #or undef if don't use this hook
-                        prolog_reader => undef,    #or undef if don't use this hook
-                        inventory_handler => $name."_inventory_handler",    #or undef if don't use this hook
-                        end_handler => undef    #or undef if don't use this hook
-   };
+	bless $self;
+}
 
-   bless $self;
+sub processes_start_handler { 	#Use this hook to test prerequisites needed by module and disble it if needed
+	my $self = shift;
+	my $logger = $self->{logger};
+
+	#$logger->debug("Yeah you are in processes_start_handler :)");
+	my $prerequisites = 0;
+	
+	if( can_run("pip") ) {
+		$prerequisites = 1;
+	}
+	
+	if ( $prerequisites == 0 ) { 
+		$self->{disabled} = 1; #Use this to disable the module
+		$logger->debug("processes_start_handler: pip not found... module disable");
+	}
+}
+
+
+sub processes_prolog_writer {	#Use this hook to add information the prolog XML
+	my $self = shift;
+	my $logger = $self->{logger};
+
+	$logger->debug("Yeah you are in processes_prolog_writer :)");
+
+}
+
+
+sub processes_prolog_reader {	#Use this hook to read the answer from OCS server
+	my $self = shift;
+	my $logger = $self->{logger};
+
+	$logger->debug("Yeah you are in processes_prolog_reader :)");
+
+}
+
+
+sub processes_inventory_handler {		#Use this hook to add or modify entries in the inventory XML
+	my $self = shift;
+	my $logger = $self->{logger};
+
+	$logger->debug("Yeah you are in processes_inventory_handler :)");
+	
+	run($self);
+
 }
 
 ######### Hook methods ############
 
-sub processes_inventory_handler {
-
+sub run {
 
     my $self = shift;
     my $logger = $self->{logger};
 
     my $common = $self->{context}->{common};
-
+	
     $logger->debug("Yeah you are in Processes_inventory_handler:)");
-
+	delete $common->{xmltags}->{PROCESSES};
     # test if ps command is available :)
     sub check {can_run("ps")}
 
@@ -68,7 +122,7 @@ sub processes_inventory_handler {
         'Nov' => '11',
         'Dec' => '12',
     );
-
+	
     my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
     my $the_year=$year+1900;
 
