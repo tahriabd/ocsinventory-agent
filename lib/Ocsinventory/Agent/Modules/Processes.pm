@@ -125,7 +125,7 @@ sub run {
 	
     my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
     my $the_year=$year+1900;
-
+    delete $common->{xmltags}->{PROCESSES};
     my $os;
     chomp($os=`uname -s`);
 

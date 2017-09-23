@@ -11,7 +11,7 @@
 package Ocsinventory::Agent::Modules::Service;
 use strict;
 use warnings;
-
+use Encode;
 
 my $initdir = '/etc/init.d';
 #my $inetddir = '/etc/inetd.d';
@@ -226,11 +226,11 @@ sub getInfos {
 	my $file = shift;
 	my $filepath = "$initdir/$file";
 	return unless -f $filepath;
-	open my $fh, '<:encoding(UTF-8)', $filepath or die;
+	open my $fh, $filepath or die;
 	$known_all{$file}->{description} = "";
 	$known_all{$file}->{provider} = "";
 	$known_all{$file}->{pathname} = $filepath;
-	while (my $line = <$fh>) {
+	while (my $line = decode('UTF-8',<$fh>)) {
 		chomp($line);
 		if ($line =~ s/^# Provides: //) {
 			$known_all{$file}->{provider} = trim($line);		
